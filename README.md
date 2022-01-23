@@ -2,10 +2,6 @@
 
 Team: Sanjeev Lakhwani, Maxwell Blackburn, Mimi Ohashi Chuapoco
 
-# Dependencies
-
--   Python 3+
-
 # How to use the project
 
 -   Open `chrome://extensions/`
