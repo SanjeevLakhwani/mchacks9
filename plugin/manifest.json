@@ -1,0 +1,23 @@
+{
+    "name": "InTensorly Distraktd",
+    "description": "Strictly no watching cat memes on youtube",
+    "version": "1.0",
+    "manifest_version": 2,
+    "icons": {
+        "32": "./icons/favicon-32x32.png",
+        "192": "./icons/android-chrome-192x192.png",
+        "512": "./icons/android-chrome-512x512.png"
+    },
+    "browser_action": {
+        "default_icon": "./icons/favicon.ico",
+        "default_popup": "Popup.html",
+        "default_title": "You are not getting away with this"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://www.youtube.com/*"],
+            "js": ["Content.js"]
+        }
+    ],
+    "permissions": ["https://www.youtube.com/*"]
+}
