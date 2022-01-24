@@ -257,55 +257,118 @@ const generateHTML = (pageName) => {
    `;
 };
 
-let done = false;
+// let done = false;
+
+// const theDead = () => {
+//     document.head.innerHTML = generateSTYLES();
+//     document.body.innerHTML = generateHTML("YOUTUBE");
+//     console.log(window.location);
+// };
+
+// setInterval(() => {
+//     if (
+//         window.location.pathname === "/watch" &&
+//         document.querySelectorAll("h1.title").length == 2 &&
+//         !done
+//     ) {
+//         const title = document.querySelectorAll("h1.title")[1].innerText;
+//         console.log(title);
+//         var requestOptions = {
+//             method: "GET",
+//             redirect: "follow",
+//         };
+
+//         fetch(
+//             `https://us-east1-genial-theory-339019.cloudfunctions.net/function-1?title="${title}`,
+//             requestOptions
+//         )
+//             .then((response) => response.text())
+//             .then((result) => {
+//                 console.log(`result: ${result}`);
+//                 if (parseFloat(result) < 0.5) {
+//                     theDead();
+//                 }
+//             })
+//             .catch((error) => console.log("error", error));
+//         // clearInterval(this);
+//         done = true;
+//         console.log("on a awtch page detecting ");
+//     }
+// }, 100);
+
+// url = "";
+
+// setInterval(() => {
+//     if (url !== window.location.href) {
+//         url = window.location.href;
+//         console.log("location changed");
+//         setTimeout(() => {
+//             done = false;
+//         }, 3000);
+//     }
+// }, 3000);
+var getTitleInterval = "";
 
 const theDead = () => {
+    console.log("killing the page");
     document.head.innerHTML = generateSTYLES();
     document.body.innerHTML = generateHTML("YOUTUBE");
     console.log(window.location);
 };
 
-setInterval(() => {
-    if (
-        window.location.pathname === "/watch" &&
-        document.querySelectorAll("h1.title").length == 2 &&
-        !done
-    ) {
-        const title = document.querySelectorAll("h1.title")[1].innerText;
-        console.log(title);
-        var requestOptions = {
-            method: "GET",
-            redirect: "follow",
-        };
+var title = "";
 
-        fetch(
-            `https://us-east1-genial-theory-339019.cloudfunctions.net/function-1?title="${title}`,
-            requestOptions
-        )
-            .then((response) => response.text())
-            .then((result) => {
-                console.log(`result: ${result}`);
-                if (parseFloat(result) < 0.5) {
-                    theDead();
-                }
-            })
-            .catch((error) => console.log("error", error));
-        // clearInterval(this);
-        done = true;
-        console.log("on a awtch page detecting ");
-    }
-}, 100);
+const detect = (title) => {
+    var requestOptions = {
+        method: "GET",
+        redirect: "follow",
+    };
 
-url = "";
+    fetch(
+        `https://us-east1-genial-theory-339019.cloudfunctions.net/function-1?title="${title}`,
+        requestOptions
+    )
+        .then((response) => response.text())
+        .then((result) => {
+            console.log(`result: ${result}`);
+            if (parseFloat(result) < 0.5) {
+                theDead();
+            } else {
+                console.log("you lucky boi, you are safe");
+            }
+        })
+        .catch((error) => console.log("error", error));
 
-setInterval(() => {
-    if (url !== window.location.href) {
-        url = window.location.href;
-        console.log("location changed");
-        setTimeout(() => {
-            done = false;
-        }, 3000);
-    }
-}, 3000);
+    clearInterval(getTitleInterval);
+};
 
-// theDead();
+const getTitle = () => {
+    getTitleInterval = setInterval(() => {
+        console.log("waiting for title to render");
+        if (document.querySelectorAll("#dot").length) {
+            const curTitle = document.querySelectorAll("h1.title")[1].innerText;
+            if (curTitle !== title) {
+                console.log("title found: ", curTitle);
+                title = curTitle;
+                detect(title);
+            }
+        }
+    }, 100);
+};
+
+let url = "";
+
+const detectPageChange = () => {
+    var add = setInterval(() => {
+        if (url !== window.location.href) {
+            url = window.location.href;
+            console.log("location changed");
+            if (window.location.pathname === "/watch") {
+                console.log("it is a watch page starting getTitle");
+                getTitle();
+            }
+        }
+    }, 1000);
+};
+
+detectPageChange();
